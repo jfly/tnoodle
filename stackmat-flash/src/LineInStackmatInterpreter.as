@@ -204,6 +204,11 @@ package {
 					return;
 				}
 			} catch(e:InvalidRS232PeriodError) {
+				// currentPeriod is always equals to [0, 0, ..., 0, data, data, ...] for some reason
+				// and if we clear the array immediately, we will lost the data which is exactly the next message from stackmat.
+				while (currentPeriod[0] == 0) {
+					currentPeriod.shift()
+				}
 				if(currentPeriod.length >= Math.max(rs232BitsPerGen2Period, rs232BitsPerGen3Period)) {
 					// We don't give up on this period until we've gone past the
 					// maximum length for a period.
