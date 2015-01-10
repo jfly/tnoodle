@@ -5,7 +5,7 @@ var assert = require('assert');
 var conf = require('./conf.js');
 var util = require('util');
 var mongoose = require('mongoose');
-mongoose.connect(conf.mongo.uri);
+//mongoose.connect(conf.mongo.uri);
 
 /*mongoose.addListener('error',function(errObj,scope_of_error) {
   util.puts(errObj);
