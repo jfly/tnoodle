@@ -68,6 +68,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.SortedMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -646,14 +648,27 @@ class ScrambleRequest {
         cb.showTextAligned(PdfContentByte.ALIGN_CENTER, "Fewest Moves", left+(competitorInfoLeft-left)/2, top-MAGIC_NUMBER, 0);
         cb.endText();
 
+        // internationalization
+        Locale currentLocale;
+        ResourceBundle messages;
+        String language;
+        String country;
+
+        language = new String("pt"); // for testing purposes
+        country = new String("BR");
+
+        currentLocale = new Locale(language, country);
+
+        messages = ResourceBundle.getBundle("net.gnehzr.tnoodle.server.webscrambles.Internationalization.MessagesBundle", currentLocale);
+
         com.itextpdf.text.List rules = new com.itextpdf.text.List(com.itextpdf.text.List.UNORDERED);
-        rules.add("Notate your solution by writing one move per bar.");
-        rules.add("To delete moves, clearly erase/blacken them.");
-        rules.add("Face moves F, B, R, L, U, and D are clockwise.");
-        rules.add("Rotations x, y, and z follow R, U, and F.");
-        rules.add("' inverts a move; 2 doubles a move. (e.g.: U', U2)");
-        rules.add("w makes a face move into two layers. (e.g.: Uw)");
-        rules.add("A [lowercase] move is a cube rotation. (e.g.: [u])");
+        rules.add(messages.getString("rule1"));
+        rules.add(messages.getString("rule2"));
+        rules.add(messages.getString("rule3"));
+        rules.add(messages.getString("rule4"));
+        rules.add(messages.getString("rule5"));
+        rules.add(messages.getString("rule6"));
+        rules.add(messages.getString("rule7"));
 
         ct.addElement(rules);
         int rulesTop = competitorInfoBottom + (withScramble ? 55 : 143);
