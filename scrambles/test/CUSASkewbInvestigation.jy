@@ -1,0 +1,45 @@
+from __future__ import print_function
+
+import csv
+import sys
+import collections
+
+import tntdebug
+
+from puzzle import SkewbPuzzle
+
+skewb = SkewbPuzzle()
+solved = skewb.getSolvedState()
+def optimally_solve_skewb(scramble):
+    unsolved = solved.applyAlgorithm(scramble)
+    for i in range(20):
+        solution = unsolved.solveIn(i)
+        if solution is not None:
+            return solution
+
+    assert False
+
+def tqdm(iterable):
+    arr = list(iterable)
+    total = len(arr)
+    for i, el in enumerate(arr):
+        print("\r%s/%s" % (i+1, total), end="")
+        sys.stdout.flush()
+        yield el
+    print()
+
+def main():
+    # ssh wca mysql cubing -e "SELECT * FROM Scrambles WHERE eventId='skewb';" > 2018-10-07-skewb.tsv
+    depth_counts = collections.Counter()
+    with open('2018-10-07-skewb.tsv') as csvfile:
+        reader = csv.DictReader(csvfile, delimiter="\t")
+        rows = [row for row in reader]# if row['competitionId'] == 'CubingUSANationals2018' ]
+        for row in tqdm(rows):
+            scramble = row['scramble']
+            optimal_solution = optimally_solve_skewb(scramble)
+            depth_counts[len(optimal_solution.split())] += 1
+
+    print(depth_counts)
+
+if __name__ == "__main__":
+    main()
